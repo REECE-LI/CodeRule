@@ -1,0 +1,192 @@
+# 嵌入式C/C++ clang-format配置文件
+# 基于LLVM风格，针对嵌入式开发优化
+
+# 基础风格
+BasedOnStyle: LLVM
+
+# 语言标准
+Language: Cpp
+Standard: c++17
+# 注：clang-format会根据文件扩展名自动识别C/C++
+# .c文件将使用C11标准，.cpp/.cc/.cxx文件将使用C++17标准
+
+# 列宽限制
+ColumnLimit: 120
+
+# 缩进设置
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+IndentCaseLabels: true
+IndentCaseBlocks: false
+IndentGotoLabels: false
+IndentPPDirectives: None
+IndentExternBlock: NoIndent
+
+# 大括号风格 (Allman style - 大括号独占一行)
+BreakBeforeBraces: Allman
+
+# 函数相关
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+AllowShortLambdasOnASingleLine: None
+
+# 函数参数处理
+BinPackParameters: false
+BinPackArguments: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowAllArgumentsOnNextLine: false
+AlignAfterOpenBracket: Align
+
+# 函数声明和定义
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+IndentWrappedFunctionNames: false
+
+# 对齐设置
+AlignConsecutiveAssignments: true
+AlignConsecutiveBitFields: true
+AlignConsecutiveDeclarations: false
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: Right
+AlignOperands: Align
+AlignTrailingComments: true
+
+# 指针和引用对齐 (靠近类型)
+PointerAlignment: Right
+ReferenceAlignment: Right
+DerivePointerAlignment: false
+
+# 空格设置
+SpaceAfterCStyleCast: false
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCaseColon: false
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceInEmptyBlock: false
+SpaceInEmptyParentheses: false
+SpacesBeforeTrailingComments: 2
+SpacesInAngles: false
+SpacesInConditionalStatement: false
+SpacesInContainerLiterals: false
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# 换行设置
+AlwaysBreakBeforeMultilineStrings: false
+BreakBeforeBinaryOperators: None
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: BeforeColon
+BreakInheritanceList: BeforeColon
+BreakStringLiterals: true
+
+# 空行控制
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 2
+EmptyLineBeforeAccessModifier: LogicalBlock
+EmptyLineAfterAccessModifier: Never
+
+# include排序
+SortIncludes: true
+IncludeBlocks: Regroup
+IncludeCategories:
+  # 系统C头文件
+  - Regex:           '^<(assert|complex|ctype|errno|fenv|float|inttypes|iso646|limits|locale|math|setjmp|signal|stdalign|stdarg|stdatomic|stdbool|stddef|stdint|stdio|stdlib|stdnoreturn|string|tgmath|threads|time|uchar|wchar|wctype)\.h>'
+    Priority:        1
+    SortPriority:    1
+  # 系统C++头文件
+  - Regex:           '^<[a-z_]+>'
+    Priority:        2
+    SortPriority:    2
+  # 第三方库头文件
+  - Regex:           '^<.*\.h>'
+    Priority:        3
+    SortPriority:    3
+  # HAL/驱动库头文件
+  - Regex:           '^"(stm32|hal_|HAL_|driver_|bsp_).*\.h"'
+    Priority:        4
+    SortPriority:    4
+  # 项目配置文件
+  - Regex:           '^"(config|conf_|cfg_).*\.h"'
+    Priority:        5
+    SortPriority:    5
+  # 项目其他头文件
+  - Regex:           '^".*\.h"'
+    Priority:        6
+    SortPriority:    6
+
+# 宏定义格式化
+AlignConsecutiveMacros: true
+MacroBlockBegin: ''
+MacroBlockEnd: ''
+
+# 注释相关
+ReflowComments: true
+SpacesBeforeTrailingComments: 2
+CommentPragmas: '^ (IWYU pragma:|TODO:|FIXME:|NOTE:|BUG:|HACK:|WARNING:)'
+
+# 惩罚设置（影响自动换行决策）
+PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 19
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakString: 1000
+PenaltyBreakTemplateDeclaration: 10
+PenaltyExcessCharacter: 1000000
+PenaltyReturnTypeOnItsOwnLine: 60
+PenaltyIndentedWhitespace: 0
+
+# 其他设置
+AllowAllConstructorInitializersOnNextLine: true
+BreakConstructorInitializersBeforeComma: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ConstructorInitializerIndentWidth: 4
+ContinuationIndentWidth: 4
+Cpp11BracedListStyle: true
+DeriveLineEnding: false
+DisableFormat: false
+ExperimentalAutoDetectBinPacking: false
+FixNamespaceComments: true
+InsertTrailingCommas: None
+NamespaceIndentation: None
+ReflowComments: true
+SortUsingDeclarations: true
+SpaceAroundPointerQualifiers: Default
+
+# 用于嵌入式特定的设置
+# 保持位域声明紧凑
+AllowShortEnumsOnASingleLine: false
+BitFieldColonSpacing: Both
+
+# 结构体初始化格式
+Cpp11BracedListStyle: false
+SpaceBeforeCpp11BracedList: true
+
+# 保持预处理器指令不缩进（嵌入式常用）
+IndentPPDirectives: None
+
+# C++17特性相关设置
+CompactNamespaces: false
+FixNamespaceComments: true
+ShortNamespaceLines: 1
+
+# C和C++混合项目说明
+# 对于混合C/C++项目：
+# - .c 和 .h 文件会被视为C代码（使用C11标准）
+# - .cpp, .cc, .cxx, .hpp 文件会被视为C++代码（使用C++17标准）
+# 如需为不同文件类型使用不同配置，可以：
+# 1. 在子目录中放置不同的.clang-format文件
+# 2. 使用命令行参数指定： clang-format -style="{BasedOnStyle: LLVM, Standard: c11}" file.c
+
+# 忽略特定的格式化（例如查找表）
+# 使用 // clang-format off 和 // clang-format on 来标记不需要格式化的代码段

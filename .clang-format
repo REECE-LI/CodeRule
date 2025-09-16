@@ -20,7 +20,6 @@ UseTab: Never
 IndentCaseLabels: true
 IndentCaseBlocks: false
 IndentGotoLabels: false
-IndentPPDirectives: None
 IndentExternBlock: NoIndent
 
 # 大括号风格 (Allman style - 大括号独占一行)
@@ -32,7 +31,6 @@ AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
 AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: false
-AllowShortEnumsOnASingleLine: false
 AllowShortLambdasOnASingleLine: None
 
 # 函数参数处理
@@ -51,7 +49,6 @@ IndentWrappedFunctionNames: false
 AlignConsecutiveAssignments: true
 AlignConsecutiveBitFields: true
 AlignConsecutiveDeclarations: false
-AlignConsecutiveMacros: true
 AlignEscapedNewlines: Right
 AlignOperands: Align
 AlignTrailingComments: true
@@ -67,14 +64,12 @@ SpaceAfterLogicalNot: false
 SpaceAfterTemplateKeyword: true
 SpaceBeforeAssignmentOperators: true
 SpaceBeforeCaseColon: false
-SpaceBeforeCpp11BracedList: false
 SpaceBeforeCtorInitializerColon: true
 SpaceBeforeInheritanceColon: true
 SpaceBeforeParens: ControlStatements
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceInEmptyBlock: false
 SpaceInEmptyParentheses: false
-SpacesBeforeTrailingComments: 2
 SpacesInAngles: false
 SpacesInConditionalStatement: false
 SpacesInContainerLiterals: false
@@ -131,7 +126,6 @@ MacroBlockBegin: ''
 MacroBlockEnd: ''
 
 # 注释相关
-ReflowComments: true
 SpacesBeforeTrailingComments: 2
 CommentPragmas: '^ (IWYU pragma:|TODO:|FIXME:|NOTE:|BUG:|HACK:|WARNING:)'
 
@@ -152,11 +146,9 @@ BreakConstructorInitializersBeforeComma: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 ConstructorInitializerIndentWidth: 4
 ContinuationIndentWidth: 4
-Cpp11BracedListStyle: true
 DeriveLineEnding: false
 DisableFormat: false
 ExperimentalAutoDetectBinPacking: false
-FixNamespaceComments: true
 InsertTrailingCommas: None
 NamespaceIndentation: None
 ReflowComments: true

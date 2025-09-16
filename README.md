@@ -1,14 +1,16 @@
 # 嵌入式C/C++代码规范
 
-## 1. 文件组织
+## 1\. 文件组织
 
 ### 1.1 文件命名
-- 源文件使用 `.c` (C语言) 或 `.cpp` (C++)
-- 头文件使用 `.h` (C/C++通用) 或 `.hpp` (C++专用)
-- 文件名使用小写字母和下划线：`uart_driver.c`, `sensor_manager.h`
-- 模块相关文件使用相同前缀：`spi_init.c`, `spi_read.c`, `spi_write.c`
+
+  - 源文件使用 `.c` (C语言) 或 `.cpp` (C++)
+  - 头文件使用 `.h` (C/C++通用) 或 `.hpp` (C++专用)
+  - 文件名使用小写字母和下划线：`uart_driver.c`, `sensor_manager.h`
+  - 模块相关文件使用相同前缀：`spi_init.c`, `spi_read.c`, `spi_write.c`
 
 ### 1.2 头文件保护
+
 ```c
 #ifndef MODULE_NAME_H
 #define MODULE_NAME_H
@@ -19,6 +21,7 @@
 ```
 
 ### 1.3 文件结构顺序
+
 ```c
 /* 1. 文件头注释 */
 /******************************************************************************
@@ -38,7 +41,11 @@
 #define BUFFER_SIZE  256
 
 /* 4. 类型定义 */
-typedef struct {...} uart_config_t;
+struct uart_config {
+    uint32_t baudrate;
+    uint8_t  data_bits;
+    uint8_t  stop_bits;
+};
 
 /* 5. 全局变量声明 */
 extern uint32_t g_system_clock;
@@ -52,9 +59,10 @@ static void uart_isr_handler(void);
 /* 8. 函数实现 */
 ```
 
-## 2. 命名规范
+## 2\. 命名规范
 
 ### 2.1 变量命名
+
 ```c
 /* 局部变量：小写字母+下划线 */
 uint32_t byte_count;
@@ -74,6 +82,7 @@ char *p_data;
 ```
 
 ### 2.2 函数命名
+
 ```c
 /* 模块名_动作_对象 */
 void uart_send_byte(uint8_t data);
@@ -89,6 +98,7 @@ void module_deinit(void);
 ```
 
 ### 2.3 宏定义命名
+
 ```c
 /* 常量宏：全大写+下划线 */
 #define UART_BAUDRATE_115200  115200
@@ -104,39 +114,49 @@ void module_deinit(void);
 ```
 
 ### 2.4 类型定义命名
+
 ```c
-/* 结构体：_t 后缀 */
-typedef struct {
+/* 结构体：直接使用 struct 标签 */
+struct uart_config {
     uint32_t baudrate;
     uint8_t  data_bits;
     uint8_t  stop_bits;
-} uart_config_t;
+};
+/* C语言中使用: struct uart_config my_config; */
+/* C++中使用: uart_config my_config; */
 
-/* 枚举：_e 后缀 */
-typedef enum {
+/* 枚举：直接使用 enum 标签 */
+enum uart_state {
     UART_STATE_IDLE = 0,
     UART_STATE_BUSY,
     UART_STATE_ERROR
-} uart_state_e;
+};
+/* C/C++中使用: enum uart_state current_state; */
 
-/* 联合体：_u 后缀 */
-typedef union {
+/* 联合体：直接使用 union 标签 */
+union data_converter {
     uint32_t word;
     uint8_t  bytes[4];
-} data_converter_u;
+};
+/* C语言中使用: union data_converter converter; */
+/* C++中使用: data_converter converter; */
 ```
 
-## 3. 代码格式
+## 3\. 代码格式
 
 ### 3.1 缩进与空格
-- 使用4个空格缩进，不使用Tab
-- 运算符两边加空格
-- 逗号后面加空格
-- 分号后面加空格（for循环中）
+
+  - 使用4个空格缩进，不使用Tab
+  - 运算符两边加空格
+  - 逗号后面加空格
+  - 分号后面加空格（for循环中）
+
+<!-- end list -->
 
 ```c
 /* 正确示例 */
-for (i = 0; i < count; i++) {
+for (i = 0; i < count; i++)
+{
     sum = sum + array[i];
 }
 
@@ -147,6 +167,7 @@ for(i=0;i<count;i++){
 ```
 
 ### 3.2 大括号风格
+
 ```c
 /* 函数定义：大括号另起一行 */
 void function_name(void)
@@ -154,23 +175,29 @@ void function_name(void)
     /* 函数体 */
 }
 
-/* 控制语句：大括号同一行 */
-if (condition) {
+/* 控制语句：大括号另起一行 (Allman 风格) */
+if (condition)
+{
     /* 代码块 */
-} else {
+}
+else
+{
     /* 代码块 */
 }
 
 /* 结构体定义 */
-typedef struct {
+struct struct_name {
     uint32_t field1;
     uint32_t field2;
-} struct_name_t;
+};
 ```
 
 ### 3.3 行宽限制
-- 每行代码不超过80个字符
-- 长表达式合理换行
+
+  - 每行代码不超过120个字符
+  - 长表达式合理换行
+
+<!-- end list -->
 
 ```c
 /* 函数参数过多时换行 */
@@ -183,14 +210,16 @@ error_code = uart_configure(UART_INSTANCE_1,
 /* 长条件表达式换行 */
 if ((uart_state == UART_STATE_READY) &&
     (tx_buffer_count > 0) &&
-    (dma_channel_available == true)) {
+    (dma_channel_available == true))
+{
     /* 处理逻辑 */
 }
 ```
 
-## 4. 注释规范
+## 4\. 注释规范
 
 ### 4.1 函数注释
+
 ```c
 /**
  * @brief  发送数据通过UART
@@ -206,6 +235,7 @@ int32_t uart_send_data(const uint8_t *p_data, uint32_t length)
 ```
 
 ### 4.2 代码注释
+
 ```c
 /* 单行注释：解释下一行代码 */
 timeout_count = TIMEOUT_VALUE;
@@ -221,37 +251,40 @@ timeout_count = TIMEOUT_VALUE;
 /* NOTE: 此处使用忙等待是为了确保时序准确 */
 ```
 
-## 5. 编程实践
+## 5\. 编程实践
 
 ### 5.1 变量初始化
+
 ```c
 /* 定义时初始化 */
 uint32_t count = 0;
 char *p_buffer = NULL;
 
 /* 结构体初始化 */
-uart_config_t config = {
+struct uart_config config = {
     .baudrate = 115200,
     .data_bits = 8,
     .stop_bits = 1,
-    .parity = PARITY_NONE
+    /* .parity 成员未在此处显式初始化，将被零初始化 */
 };
 ```
 
 ### 5.2 错误处理
+
 ```c
 /* 使用错误码 */
-typedef enum {
+enum error_code {
     ERR_OK = 0,
     ERR_INVALID_PARAM = -1,
     ERR_TIMEOUT = -2,
     ERR_BUSY = -3
-} error_code_e;
+};
 
 /* 错误检查示例 */
-error_code_e uart_init(const uart_config_t *p_config)
+enum error_code uart_init(const struct uart_config *p_config)
 {
-    if (p_config == NULL) {
+    if (p_config == NULL)
+    {
         return ERR_INVALID_PARAM;
     }
     
@@ -262,17 +295,20 @@ error_code_e uart_init(const uart_config_t *p_config)
 ```
 
 ### 5.3 防御性编程
+
 ```c
 /* 参数检查 */
 void process_data(uint8_t *p_buffer, uint32_t size)
 {
     /* 空指针检查 */
-    if (p_buffer == NULL) {
+    if (p_buffer == NULL)
+    {
         return;
     }
     
     /* 边界检查 */
-    if (size > MAX_BUFFER_SIZE) {
+    if (size > MAX_BUFFER_SIZE)
+    {
         size = MAX_BUFFER_SIZE;
     }
     
@@ -282,7 +318,8 @@ void process_data(uint8_t *p_buffer, uint32_t size)
 /* 断言使用（仅在调试版本） */
 #ifdef DEBUG
     #define ASSERT(expr) do { \
-        if (!(expr)) { \
+        if (!(expr)) \
+        { \
             assert_failed(__FILE__, __LINE__); \
         } \
     } while(0)
@@ -292,10 +329,12 @@ void process_data(uint8_t *p_buffer, uint32_t size)
 ```
 
 ### 5.4 内存管理
+
 ```c
 /* 动态内存分配检查 */
 uint8_t *p_buffer = (uint8_t *)malloc(size);
-if (p_buffer == NULL) {
+if (p_buffer == NULL)
+{
     /* 错误处理 */
     return ERR_NO_MEMORY;
 }
@@ -310,13 +349,15 @@ uint8_t local_buffer[32];                      /* 栈分配 */
 ```
 
 ### 5.5 中断处理
+
 ```c
 /* 中断服务函数：简短快速 */
 void UART_IRQHandler(void)
 {
     uint32_t status = UART->SR;
     
-    if (status & UART_SR_RXNE) {
+    if (status & UART_SR_RXNE)
+    {
         /* 接收数据到缓冲区 */
         g_rx_buffer[g_rx_index++] = UART->DR;
         g_rx_flag = 1;  /* 设置标志，主循环处理 */
@@ -340,9 +381,10 @@ void exit_critical(uint32_t primask)
 }
 ```
 
-## 6. 嵌入式特定规范
+## 6\. 嵌入式特定规范
 
 ### 6.1 寄存器访问
+
 ```c
 /* 使用volatile关键字 */
 #define REG32(addr)  (*((volatile uint32_t *)(addr)))
@@ -357,20 +399,22 @@ void exit_critical(uint32_t primask)
 ```
 
 ### 6.2 内存对齐
+
 ```c
 /* 结构体对齐 */
-typedef struct {
+struct packed_struct {
     uint8_t  byte1;
     uint8_t  byte2;
     uint16_t word1;    /* 2字节对齐 */
     uint32_t dword1;   /* 4字节对齐 */
-} __attribute__((packed)) packed_struct_t;
+} __attribute__((packed));
 
 /* DMA缓冲区对齐 */
 __attribute__((aligned(4))) uint8_t dma_buffer[256];
 ```
 
 ### 6.3 ROM优化
+
 ```c
 /* 常量数据放入ROM */
 const uint8_t lookup_table[256] = {
@@ -387,6 +431,7 @@ const char *const error_messages[] = {
 ```
 
 ### 6.4 功耗优化
+
 ```c
 /* 进入低功耗模式 */
 void enter_low_power_mode(void)
@@ -402,35 +447,40 @@ void enter_low_power_mode(void)
 }
 ```
 
-## 7. 代码审查要点
+## 7\. 代码审查要点
 
 ### 7.1 安全性检查
-- 数组边界检查
-- 指针有效性验证
-- 整数溢出防护
-- 栈溢出预防
+
+  - 数组边界检查
+  - 指针有效性验证
+  - 整数溢出防护
+  - 栈溢出预防
 
 ### 7.2 可靠性检查
-- 错误返回值处理
-- 资源释放（内存、文件句柄等）
-- 死锁避免
-- 竞态条件防护
+
+  - 错误返回值处理
+  - 资源释放（内存、文件句柄等）
+  - 死锁避免
+  - 竞态条件防护
 
 ### 7.3 性能检查
-- 循环优化
-- 内存访问局部性
-- 缓存友好的数据结构
-- 避免不必要的复制
+
+  - 循环优化
+  - 内存访问局部性
+  - 缓存友好的数据结构
+  - 避免不必要的复制
 
 ### 7.4 可维护性检查
-- 代码可读性
-- 注释完整性
-- 模块化程度
-- 接口清晰度
 
-## 8. 版本控制规范
+  - 代码可读性
+  - 注释完整性
+  - 模块化程度
+  - 接口清晰度
+
+## 8\. 版本控制规范
 
 ### 8.1 提交信息格式
+
 ```
 [类型] 简短描述
 
@@ -440,22 +490,24 @@ void enter_low_power_mode(void)
 ```
 
 类型包括：
-- feat: 新功能
-- fix: 修复bug
-- docs: 文档更新
-- style: 代码格式调整
-- refactor: 重构
-- test: 测试相关
-- chore: 构建过程或辅助工具的变动
+
+  - feat: 新功能
+  - fix: 修复bug
+  - docs: 文档更新
+  - style: 代码格式调整
+  - refactor: 重构
+  - test: 测试相关
+  - chore: 构建过程或辅助工具的变动
 
 ### 8.2 分支管理
-- master/main: 稳定版本
-- develop: 开发分支
-- feature/xxx: 功能分支
-- bugfix/xxx: 修复分支
-- release/x.x.x: 发布分支
 
-## 9. 附录：常用缩写规范
+  - master/main: 稳定版本
+  - develop: 开发分支
+  - feature/xxx: 功能分支
+  - bugfix/xxx: 修复分支
+  - release/x.x.x: 发布分支
+
+## 9\. 附录：常用缩写规范
 
 | 缩写 | 全称 | 说明 |
 |------|------|------|
@@ -486,9 +538,10 @@ void enter_low_power_mode(void)
 | temp/tmp | temporary | 临时 |
 | val | value | 值 |
 
-## 10. 代码模板示例
+## 10\. 代码模板示例
 
 ### 10.1 模块头文件模板
+
 ```c
 #ifndef MODULE_NAME_H
 #define MODULE_NAME_H
@@ -509,17 +562,18 @@ extern "C" {
 #define MODULE_VERSION  "1.0.0"
 
 /***************************************************************************
- * Typedefs
+ * Typedefs 
+ * (在此处定义 struct/enum/union 标签)
  ***************************************************************************/
-typedef struct {
+struct module_config {
     uint32_t param1;
     uint32_t param2;
-} module_config_t;
+};
 
 /***************************************************************************
  * Exported Functions
  ***************************************************************************/
-int32_t module_init(const module_config_t *p_config);
+int32_t module_init(const struct module_config *p_config);
 int32_t module_deinit(void);
 int32_t module_process(uint8_t *p_data, uint32_t length);
 
@@ -531,6 +585,7 @@ int32_t module_process(uint8_t *p_data, uint32_t length);
 ```
 
 ### 10.2 模块源文件模板
+
 ```c
 /***************************************************************************
  * @file    module_name.c
@@ -544,6 +599,7 @@ int32_t module_process(uint8_t *p_data, uint32_t length);
  * Includes
  ***************************************************************************/
 #include "module_name.h"
+#include <string.h> // 假设 memset 在此
 
 /***************************************************************************
  * Private Defines
@@ -553,21 +609,21 @@ int32_t module_process(uint8_t *p_data, uint32_t length);
 /***************************************************************************
  * Private Types
  ***************************************************************************/
-typedef struct {
+struct module_context {
     uint8_t  buffer[INTERNAL_BUFFER_SIZE];
     uint32_t index;
     bool     is_initialized;
-} module_context_t;
+};
 
 /***************************************************************************
  * Private Variables
  ***************************************************************************/
-static module_context_t s_context = {0};
+static struct module_context s_context = {0};
 
 /***************************************************************************
  * Private Function Prototypes
  ***************************************************************************/
-static int32_t validate_config(const module_config_t *p_config);
+static int32_t validate_config(const struct module_config *p_config);
 static void process_internal(void);
 
 /***************************************************************************
@@ -579,13 +635,14 @@ static void process_internal(void);
  * @param  p_config: 配置参数指针
  * @retval 0: 成功, <0: 错误码
  */
-int32_t module_init(const module_config_t *p_config)
+int32_t module_init(const struct module_config *p_config)
 {
     int32_t ret;
     
     /* 参数检查 */
     ret = validate_config(p_config);
-    if (ret != 0) {
+    if (ret != 0)
+    {
         return ret;
     }
     
@@ -600,9 +657,10 @@ int32_t module_init(const module_config_t *p_config)
  * Private Functions
  ***************************************************************************/
 
-static int32_t validate_config(const module_config_t *p_config)
+static int32_t validate_config(const struct module_config *p_config)
 {
-    if (p_config == NULL) {
+    if (p_config == NULL)
+    {
         return -1;
     }
     
@@ -612,10 +670,11 @@ static int32_t validate_config(const module_config_t *p_config)
 }
 ```
 
----
+-----
 
 **注意事项：**
-1. 本规范可根据具体项目和团队需求进行调整
-2. 使用自动化工具（如clang-format）确保代码格式一致性
-3. 定期进行代码审查，确保规范得到遵守
-4. 对于特定MCU平台，参考厂商提供的编程指南
+
+1.  本规范可根据具体项目和团队需求进行调整
+2.  使用自动化工具（如clang-format）确保代码格式一致性
+3.  定期进行代码审查，确保规范得到遵守
+4.  对于特定MCU平台，参考厂商提供的编程指南
